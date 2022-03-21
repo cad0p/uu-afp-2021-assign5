@@ -25,3 +25,45 @@ not false = true
 ifThenElse : Bool → Bool → Bool → Bool
 ifThenElse true t e = t
 ifThenElse false t e = e
+
+-- operator language: underscores in positions where i have the parameter
+if_then_else_ : Bool → Bool → Bool → Bool
+if true then t else e = t
+if false then t else e = e
+-- so now this is just a function, rather than anything built in
+
+-- constructors in Agda don't need to have a capital letter
+-- nat is backslash b N
+data ℕ : Set where
+    zero : ℕ
+    succ : ℕ → ℕ
+
+_+_ : ℕ → ℕ → ℕ
+zero + m = m
+succ n + m = succ (n + m)
+
+data List (a : Set) : Set where
+    nil : List a
+    cons : a → List a → List a
+
+-- scoping rules for types are different in Agda
+-- the below fails, a not in scope
+-- append : List a → List a → List a
+-- so the first solution is to apply another argument 
+-- so that it typechecks:
+-- cons ? ? becomes with c-c,c-r the refinement
+-- append : (a : Set) → List a → List a → List a
+-- append a nil ys = ys
+-- append a (cons x xs) ys = cons x (append a xs ys)
+
+-- but the previous does not work nicely, Agda has "implicit arguments"
+-- which means that it knows what a can be, at instance time
+append : {a : Set} → List a → List a → List a
+append nil ys = ys
+append (cons x xs) ys = cons x (append xs ys)
+-- append {a} (cons x xs) ys = cons x (append xs ys)
+-- if you want to access the implicit argument
+
+appendBool : List Bool → List Bool → List Bool
+appendBool bs1 bs2 = append {Bool} bs1 bs2
+
