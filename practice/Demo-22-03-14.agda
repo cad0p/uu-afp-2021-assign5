@@ -67,3 +67,33 @@ append (cons x xs) ys = cons x (append xs ys)
 appendBool : List Bool → List Bool → List Bool
 appendBool bs1 bs2 = append {Bool} bs1 bs2
 
+-- map : {a : Set} {b : Set} → (a → b) → List a → List b
+-- map f nil = nil
+-- map f (cons x xs) = cons (f x) (map f xs)
+-- map : {a b : Set} → (a → b) → List a → List b
+-- you can also group the implicit arguments if they have the same signature
+
+-- variable notation: introduces haskell convention of binding,
+-- so that you can write this:
+
+variable
+    a b : Set
+    n : ℕ
+
+map : (a → b) → List a → List b
+map f nil = nil
+map f (cons x xs) = cons (f x) (map f xs)
+-- sometime it's useful
+
+-- the ℕ is index, a parameter
+-- everything left is traditional style,
+-- everything right is GADT style
+data Vec (a : Set) : ℕ → Set where
+    nil : Vec a zero
+    cons : a → Vec a n -> Vec a (succ n)
+
+-- here c-c,c-a works nicely to autocomplete, for some reason
+vmap : (a → b) → Vec a n → Vec b n
+vmap f nil = nil
+vmap f (cons x xs) = cons (f x) (vmap f xs)
+-- a lot of my thought goes into type signatures, it autocompletes the code nicely
