@@ -83,7 +83,7 @@ variable
 map : (a → b) → List a → List b
 map f nil = nil
 map f (cons x xs) = cons (f x) (map f xs)
--- sometime it's useful
+-- sometimes it's useful
 
 -- the ℕ is index, a parameter
 -- everything left is traditional style,
