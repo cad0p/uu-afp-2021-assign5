@@ -190,3 +190,7 @@ lemma3 (succ n) m = sym {!  !}
 -- cog have meta programs called tactics which will generate these proofs for you
 -- the other useful thing
 -- we could make a Domain Specific Language to do this 
+
+
+-- BAD means that for each P, I can find an inhabitant.
+-- this means I can find an inhabitant of the Empty type

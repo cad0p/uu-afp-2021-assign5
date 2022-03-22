@@ -80,18 +80,17 @@ data Maybe (a : Set) : Set where
 --   Nil : Vec a 0
 --   Cons : {n : Nat} -> (x : a) -> (xs : Vec a n) -> Vec a (Succ n)
 
-_-_ : Nat -> Nat -> Nat
-n     - Zero = n
-Zero  - m = Zero
-Succ n - Succ m = n - m
-
-proofSuccOfPredIsN : (n : Nat) -> Succ (n - 1) == n
-proofSuccOfPredIsN Zero = {!   !}
-proofSuccOfPredIsN (Succ n) = {!   !}
-
 
 pure : {n : Nat} {a : Set} -> a -> Vec a n
-pure {n} {a} x = {!   !}
+pure {Zero} {a} x = Nil
+pure {Succ n} {a} x = Cons x (pure {n} {a} x)
+-- very strange error:
+{- n != Zero of type Nat
+when checking that the inferred type of an application
+  Vec a (Succ n)
+matches the expected type
+  Vec a 1
+  -}
 -- Cons {a} {n - 1} x Nil
 
 _<*>_ : {a b : Set} {n : Nat} -> Vec (a -> b) n -> Vec a n -> Vec b n
