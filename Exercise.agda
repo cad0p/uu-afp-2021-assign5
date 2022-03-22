@@ -76,8 +76,23 @@ data Maybe (a : Set) : Set where
 
 --Show that the Vec a n type is applicative
 
+-- data Vec (a : Set) : Nat -> Set where
+--   Nil : Vec a 0
+--   Cons : {n : Nat} -> (x : a) -> (xs : Vec a n) -> Vec a (Succ n)
+
+_-_ : Nat -> Nat -> Nat
+n     - Zero = n
+Zero  - m = Zero
+Succ n - Succ m = n - m
+
+proofSuccOfPredIsN : (n : Nat) -> Succ (n - 1) == n
+proofSuccOfPredIsN Zero = {!   !}
+proofSuccOfPredIsN (Succ n) = {!   !}
+
+
 pure : {n : Nat} {a : Set} -> a -> Vec a n
-pure = {!!}
+pure {n} {a} x = {!   !}
+-- Cons {a} {n - 1} x Nil
 
 _<*>_ : {a b : Set} {n : Nat} -> Vec (a -> b) n -> Vec a n -> Vec b n
 _<*>_ = {!!}
