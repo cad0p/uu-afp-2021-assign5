@@ -98,9 +98,9 @@ vmap : {a b : Set} {n : Nat} -> (a -> b) -> Vec a n -> Vec b n
 vmap f Nil = Nil
 vmap f (Cons x v) = Cons (f x) (vmap f v)
 
-vadd : {n : Nat} -> Vec Nat n -> Vec Nat n -> Vec Nat n
-vadd Nil ys = ys
-vadd (Cons x xs) (Cons y ys) = Cons (x + y) (vadd xs ys)
+_+v_ : {n : Nat} -> Vec Nat n -> Vec Nat n -> Vec Nat n
+Nil +v ys = ys
+(Cons x xs) +v (Cons y ys) = Cons (x + y) (xs +v ys)
 
 ----------------------
 ----- Exercise 2 -----
@@ -121,9 +121,8 @@ madd : {n m : Nat} -> Matrix Nat m n -> Matrix Nat m n -> Matrix Nat m n
 -- there's nothing to add
 madd Nil yss = yss
 -- we have depleted the row
-madd (Cons Nil xss₁) (Cons yss yss₁) = Cons yss (madd xss₁ yss₁)
-madd (Cons (Cons x xss) xss₁) (Cons yss yss₁) = 
-  {!   !}
+madd (Cons xss xss₁) (Cons yss yss₁) = Cons (xss +v yss) (madd xss₁ yss₁)
+
 
 -- Define the identity matrix
 idMatrix : {n : Nat} -> Matrix Nat n n
