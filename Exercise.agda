@@ -1,3 +1,6 @@
+{-# OPTIONS --allow-unsolved-metas #-}
+
+
 module Exercise where
 
 {- Instruction: Fill in all the missing definitions. In most cases,
