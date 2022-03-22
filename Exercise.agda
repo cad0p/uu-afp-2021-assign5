@@ -80,18 +80,12 @@ data Maybe (a : Set) : Set where
 --   Nil : Vec a 0
 --   Cons : {n : Nat} -> (x : a) -> (xs : Vec a n) -> Vec a (Succ n)
 
-
+-- here I'm case splitting on n
+-- after trying without case splitting and failing
+-- the result is a vector with n xs, like {1,1,1,1} if n==4
 pure : {n : Nat} {a : Set} -> a -> Vec a n
 pure {Zero} {a} x = Nil
 pure {Succ n} {a} x = Cons x (pure {n} {a} x)
--- very strange error:
-{- n != Zero of type Nat
-when checking that the inferred type of an application
-  Vec a (Succ n)
-matches the expected type
-  Vec a 1
-  -}
--- Cons {a} {n - 1} x Nil
 
 _<*>_ : {a b : Set} {n : Nat} -> Vec (a -> b) n -> Vec a n -> Vec b n
 _<*>_ = {!!}
