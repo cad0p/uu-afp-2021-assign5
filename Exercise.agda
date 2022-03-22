@@ -98,6 +98,10 @@ vmap : {a b : Set} {n : Nat} -> (a -> b) -> Vec a n -> Vec b n
 vmap f Nil = Nil
 vmap f (Cons x v) = Cons (f x) (vmap f v)
 
+vadd : {n : Nat} -> Vec Nat n -> Vec Nat n -> Vec Nat n
+vadd Nil ys = ys
+vadd (Cons x xs) (Cons y ys) = Cons (x + y) (vadd xs ys)
+
 ----------------------
 ----- Exercise 2 -----
 ----------------------
@@ -106,11 +110,20 @@ vmap f (Cons x v) = Cons (f x) (vmap f v)
 -- matrix addition; the identity matrix; and matrix transposition.
 
 Matrix : Set -> Nat -> Nat -> Set
+-- n columns, m rows
 Matrix a n m = Vec (Vec a n) m 
+
+-- exampleMatrix : Matrix Bool 1 1
+-- exampleMatrix = Cons (Cons True Nil) Nil
 
 -- Define matrix addition
 madd : {n m : Nat} -> Matrix Nat m n -> Matrix Nat m n -> Matrix Nat m n
-madd xss yss = {!   !}
+-- there's nothing to add
+madd Nil yss = yss
+-- we have depleted the row
+madd (Cons Nil xss₁) (Cons yss yss₁) = Cons yss (madd xss₁ yss₁)
+madd (Cons (Cons x xss) xss₁) (Cons yss yss₁) = 
+  {!   !}
 
 -- Define the identity matrix
 idMatrix : {n : Nat} -> Matrix Nat n n
@@ -346,3 +359,4 @@ correctness e = {!!}
 --BONUS exercises: extend the language with new constructs for let
 --bindings, variables, new operators, mutable references, assignment,
 --functions, ...
+ 

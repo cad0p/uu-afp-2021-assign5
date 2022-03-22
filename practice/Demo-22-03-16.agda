@@ -1,3 +1,5 @@
+{-# OPTIONS --allow-unsolved-metas #-}
+
 module Demo-22-03-16 where
 
 import Demo-22-03-14
