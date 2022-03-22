@@ -88,7 +88,8 @@ pure {Zero} {a} x = Nil
 pure {Succ n} {a} x = Cons x (pure {n} {a} x)
 
 _<*>_ : {a b : Set} {n : Nat} -> Vec (a -> b) n -> Vec a n -> Vec b n
-_<*>_ = {!!}
+Nil <*> v₂ = Nil
+Cons x₁ v₁ <*> Cons x₂ v₂ = Cons (x₁ x₂) (v₁ <*> v₂)
 
 vmap : {a b : Set} {n : Nat} -> (a -> b) -> Vec a n -> Vec b n
 vmap = {!!}
