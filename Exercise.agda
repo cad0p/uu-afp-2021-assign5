@@ -95,7 +95,8 @@ Nil <*> v₂ = Nil
 Cons x₁ v₁ <*> Cons x₂ v₂ = Cons (x₁ x₂) (v₁ <*> v₂)
 
 vmap : {a b : Set} {n : Nat} -> (a -> b) -> Vec a n -> Vec b n
-vmap = {!!}
+vmap f Nil = Nil
+vmap f (Cons x v) = Cons (f x) (vmap f v)
 
 ----------------------
 ----- Exercise 2 -----
@@ -109,7 +110,7 @@ Matrix a n m = Vec (Vec a n) m
 
 -- Define matrix addition
 madd : {n m : Nat} -> Matrix Nat m n -> Matrix Nat m n -> Matrix Nat m n
-madd xss yss = {!!}
+madd xss yss = {!   !}
 
 -- Define the identity matrix
 idMatrix : {n : Nat} -> Matrix Nat n n
@@ -243,7 +244,7 @@ leq<= = {!!}
 <=leq = {!!} 
 
 ----------------------
------ Exercise 7 -----
+----- Exercise 8 -----
 ----------------------
 
 -- We can define negation as follows
