@@ -113,8 +113,11 @@ Matrix : Set -> Nat -> Nat -> Set
 -- n columns, m rows
 Matrix a n m = Vec (Vec a n) m 
 
--- exampleMatrix : Matrix Bool 1 1
--- exampleMatrix = Cons (Cons True Nil) Nil
+exampleMatrix : Matrix Bool 1 1
+exampleMatrix = Cons (Cons True Nil) Nil
+
+exampleMatrixEmpty : Matrix Bool 0 0
+exampleMatrixEmpty = Nil
 
 -- Define matrix addition
 madd : {n m : Nat} -> Matrix Nat m n -> Matrix Nat m n -> Matrix Nat m n
@@ -124,9 +127,41 @@ madd Nil yss = yss
 madd (Cons xss xss₁) (Cons yss yss₁) = Cons (xss +v yss) (madd xss₁ yss₁)
 
 
+-- we need to define another function to create a vector of 
+-- size n with all 0s
+zeroVec : (n : Nat) -> Vec Nat n
+zeroVec Zero = Nil
+zeroVec (Succ n) = Cons 0 (zeroVec n)
+
+exampleZeroVec : zeroVec Zero == Nil
+exampleZeroVec = Refl
+
+-- we need to define function that creates
+-- a vector of size n with a 1 in position i, 0 < i <= n
+-- idVec {1} 1 = Cons 1 Nil
+idVec : {n : Nat} -> Nat -> Maybe (Vec Nat n)
+idVec {Zero} Zero = Just Nil
+idVec {Zero} (Succ i) = Nothing
+idVec {Succ n} Zero = Just (Cons 1 (zeroVec n))
+idVec {Succ n} (Succ i) = {!   !}
+
+
 -- Define the identity matrix
 idMatrix : {n : Nat} -> Matrix Nat n n
-idMatrix = {!!}
+idMatrix {n} = helper n n where 
+  -- the actual row is n - row, same for columns
+  helper : (r c : Nat) -> Matrix Nat c r
+  helper Zero c = {!   !}
+  helper (Succ r) c = {!   !}  
+
+
+
+
+-- ? we need to define stuff before, cannot reference after?
+
+-- ? why can't we overload the plus?
+
+
 
 -- Define matrix transposition
 transpose : {n m : Nat} {a : Set} -> Matrix a m n -> Matrix a n m

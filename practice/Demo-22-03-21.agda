@@ -17,3 +17,12 @@ data Maybe (A : Set) : Set where
 maybeHead :  List a -> Maybe a
 maybeHead nil         = nothing
 maybeHead (cons x xs) = just x
+
+vhead : Vec a (succ n) → a
+vhead (cons x xs) = x
+
+-- the element at index n index of the list
+_!!_ : List a → ℕ → Maybe a
+nil !! n = nothing
+cons x xs !! zero = just x
+cons x xs !! (succ n) = xs !! n
