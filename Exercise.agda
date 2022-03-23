@@ -136,6 +136,9 @@ zeroVec (Succ n) = Cons 0 (zeroVec n)
 exampleZeroVec : zeroVec Zero == Nil
 exampleZeroVec = Refl
 
+exampleZeroVec2 : zeroVec 2 == Cons Zero (Cons Zero Nil)
+exampleZeroVec2 = Refl
+
 -- we need to define function that creates
 -- a vector of size n with a 1 in position i, 0 < i <= n
 -- idVec {1} 1 = Cons 1 Nil
