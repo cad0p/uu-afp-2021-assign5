@@ -133,20 +133,20 @@ zeroVec : (n : Nat) -> Vec Nat n
 zeroVec Zero = Nil
 zeroVec (Succ n) = Cons 0 (zeroVec n)
 
-exampleZeroVec : zeroVec Zero == Nil
-exampleZeroVec = Refl
 
-exampleZeroVec2 : zeroVec 2 == Cons Zero (Cons Zero Nil)
-exampleZeroVec2 = Refl
 
 -- we need to define function that creates
 -- a vector of size n with a 1 in position i, 0 < i <= n
--- idVec {1} 1 = Cons 1 Nil
+-- idVec {1} 1 == Cons 1 Nil
 idVec : {n : Nat} -> Nat -> Maybe (Vec Nat n)
 idVec {Zero} Zero = Just Nil
 idVec {Zero} (Succ i) = Nothing
-idVec {Succ n} Zero = Just (Cons 1 (zeroVec n))
-idVec {Succ n} (Succ i) = {!   !}
+-- idVec {1} 1 = Just (Cons 1 Nil)
+idVec {Succ n} Zero = Nothing
+idVec {Succ n} 1 = Just (Cons 1 (zeroVec n))
+idVec {Succ n} (Succ i) with idVec {n} i
+... | Just x = Just (Cons 0 x)
+... | Nothing = Nothing
 
 
 -- Define the identity matrix
@@ -163,6 +163,7 @@ idMatrix {n} = helper n n where
 -- ? we need to define stuff before, cannot reference after?
 
 -- ? why can't we overload the plus?
+-- we can with general typing
 
 
 
