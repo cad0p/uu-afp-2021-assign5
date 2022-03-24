@@ -174,10 +174,46 @@ idMatrix {n} = helper n where
 -- we can with general typing
 
 
+--- Start of matrix transposition --
+
+-- to define matrix transposition you are faced with this:
+{-
+    Cons (Cons 1 (Cons 2 (Cons 2 Nil)))(
+    Cons (Cons 4 (Cons 5 (Cons 6 Nil)))(
+    Cons (Cons 7 (Cons 8 (Cons 9 Nil))) 
+    Nil))
+
+    which is basically this:
+    1 2 3       1 4 7
+    4 5 6   ->  2 5 8
+    7 8 9       3 6 9
+
+    of course it can also be rectangular, not square
+
+    our helper function will have to read 
+    Cons xs xss
+    where xs = 1 2 3 and create 
+    1 (f₁ xss)
+    2 (f₂ xss)
+    3 (f₃ xss)
+
+
+    so the initial case means that we have to take xs
+    and depending on the row you are in (the parameter),
+    the function will only act on that particular element
+    for this we need the !! operator for vectors
+    
+    
+
+-}
+
+-- Define !! for vectors to get the index
+
+
 
 -- Define matrix transposition
 transpose : {n m : Nat} {a : Set} -> Matrix a m n -> Matrix a n m
-transpose = {!!}
+transpose = {!   !}
   
 ----------------------
 ----- Exercise 3 -----
