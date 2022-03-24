@@ -159,7 +159,7 @@ idMatrix {n} = helper n where
   -- n is the number of columns
   helper : (r : Nat) -> Matrix Nat n r
   helper Zero = Nil
-  helper (Succ r) with idVec {n} (compNat n (Succ r))
+  helper (Succ r) with idVec {n} (compNat n r)
   ... | Just x = Cons x (helper r)
   -- the case below is actually unreachable
   -- ? why doesn't Agda tell us?

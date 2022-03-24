@@ -71,8 +71,8 @@ testIdMatrix₁ : idMatrix {1} == Cons (Cons 1 Nil) Nil
 testIdMatrix₁ = Refl
 
 
--- testIdMatrix₂ : idMatrix {2} == 
---     Cons (Cons 1 (Cons Zero Nil)) (
---     Cons (Cons Zero (Cons 1 Nil)) 
---     Nil)
--- testIdMatrix₂ = Refl
+testIdMatrix₂ : idMatrix {2} == 
+    Cons (Cons 1 (Cons Zero Nil)) (
+    Cons (Cons Zero (Cons 1 Nil)) 
+    Nil)
+testIdMatrix₂ = Refl
