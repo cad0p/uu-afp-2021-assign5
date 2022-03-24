@@ -250,7 +250,7 @@ transpose {c} {r} xss =  g xss c where
 
   g : {c r : Nat} {a : Set} -> Matrix a c r -> (cᵢ : Nat) -> Matrix a r cᵢ 
   g {c} {r} xss Zero = Nil
-  g {c} {r} xss (Succ cᵢ) = Cons (f xss (compNat c cᵢ)) (g xss cᵢ)
+  g {c} {r} xss (Succ cᵢ) = Cons (f xss (compNat c (Succ cᵢ))) (g xss cᵢ)
   
   
   
