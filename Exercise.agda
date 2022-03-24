@@ -227,6 +227,11 @@ Nil !!v i = Nothing
 Cons x xs !!v Zero = Just x
 Cons x xs !!v Succ i = xs !!v i
 
+-- -- apparently we have to define a mock vector for when
+-- -- unreachable Nothing cases appear..
+-- -- it will contain the first column, which we know it's there for sure..
+-- mockVec {a : Set} -> Cons 
+
 
 -- Define matrix transposition
 transpose : {c r : Nat} {a : Set} -> Matrix a c r -> Matrix a r c
@@ -237,7 +242,11 @@ transpose {c} {r} xss =  g xss c where
    with xs !!v i 
   ... | Just x = Cons x (f xss i)
   -- ? why does Agda not realize it's unreachable
-  ... | Nothing = f (Cons xs xss) (compNat i i)
+  ... | Nothing with xs
+            -- no solution here
+  ...              | Nil = Cons {!   !} {!   !}
+            -- i guess just take the first element then
+  ...              | Cons x₁ xs₁ = Cons x₁ (f xss i)
 
   g : {c r : Nat} {a : Set} -> Matrix a c r -> (cᵢ : Nat) -> Matrix a r cᵢ 
   g {c} {r} xss Zero = Nil
