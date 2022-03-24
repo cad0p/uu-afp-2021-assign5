@@ -203,17 +203,36 @@ idMatrix {n} = helper n where
     the function will only act on that particular element
     for this we need the !! operator for vectors
     
-    
+    so this helper function will have to take
+    the Matrix of length c r, a Nat for the index,
+    and it will return a Vec of size r
+
+    and it will recursively call itself with r - 1
+
+    the problem here is that you have to call this function for each row
+    so i guess you will have another function g that gets as input
+    a matrix of size c r and returns a matrix of size r c,
+    which is exactly transpose
+
+    so we have to have a real function g that actually is recursive and
+    gets as input the whole matrix and a decreasing index
+    (which is initially the number of columns) and returns a
+    matrix of size r cᵢ, where cᵢ represents the old columns and the new rows
 
 -}
 
 -- Define !! for vectors to get the index
-
+_!!v_ : {n : Nat} {a : Set} -> Vec a n -> Nat -> Maybe a
+Nil !!v i = Nothing
+Cons x xs !!v Zero = Just x
+Cons x xs !!v Succ i = xs !!v i
 
 
 -- Define matrix transposition
-transpose : {n m : Nat} {a : Set} -> Matrix a m n -> Matrix a n m
-transpose = {!   !}
+transpose : {c r : Nat} {a : Set} -> Matrix a c r -> Matrix a r c
+transpose {c} {r} xss =  g xss c where 
+  g : {c r : Nat} {a : Set} -> Matrix a c r -> (cᵢ : Nat) -> Matrix a r cᵢ 
+  g = {!   !}
   
 ----------------------
 ----- Exercise 3 -----
