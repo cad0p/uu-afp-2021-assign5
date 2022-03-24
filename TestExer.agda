@@ -76,3 +76,10 @@ testIdMatrix₂ : idMatrix {2} ==
     Cons (Cons Zero (Cons 1 Nil)) 
     Nil)
 testIdMatrix₂ = Refl
+
+testIdMatrix₃ : idMatrix {3} == 
+    Cons (Cons 1 (Cons Zero (Cons Zero Nil)))(
+    Cons (Cons Zero (Cons 1 (Cons Zero Nil)))(
+    Cons (Cons Zero (Cons Zero (Cons 1 Nil))) 
+    Nil))
+testIdMatrix₃ = Refl
