@@ -142,19 +142,28 @@ idVec {Succ n} (Succ i) with idVec {n} i
 ... | Nothing = Nothing
 
 
+-- now we get a reverse id matrix, with the diagonal from
+-- lower left to upper right
+-- to solve this we need a function that maps i to n - i
+-- this evaluates to Zero if n < i
+compNat : Nat -> Nat -> Nat
+compNat (Succ n) (Succ i) = compNat n i
+compNat n i = n
+
+
 -- Define the identity matrix
 idMatrix : {n : Nat} -> Matrix Nat n n
 idMatrix {n} = helper n where 
   -- r row is actually n - row
+  -- which is compNat n r
   -- n is the number of columns
   helper : (r : Nat) -> Matrix Nat n r
   helper Zero = Nil
-  helper (Succ r) with idVec {n} (Succ r)
+  helper (Succ r) with idVec {n} (compNat n (Succ r))
   ... | Just x = Cons x (helper r)
   -- the case below is actually unreachable
   -- ? why doesn't Agda tell us?
   ... | Nothing = Cons (zeroVec n) (helper r)
-  -- helper (Succ r) = {!   !}  
 
 
 

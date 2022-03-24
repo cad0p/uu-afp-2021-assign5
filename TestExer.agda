@@ -40,6 +40,29 @@ testIdVec2₂ = Refl
 testIdVec2₃ : idVec {2} 3 == Nothing
 testIdVec2₃ = Refl
 
+-- so this below is wrong, we need another function
+-- testIdMatrix₀ : idMatrix {0} == Nil
+-- testIdMatrix₀ = Refl
+
+-- testIdMatrix₁ : idMatrix {1} == Cons (Cons 1 Nil) Nil
+-- testIdMatrix₁ = Refl
+
+
+-- testIdMatrix₂ : idMatrix {2} == 
+--     Cons (Cons Zero (Cons 1 Nil)) (
+--     Cons (Cons 1 (Cons Zero Nil)) 
+--     Nil)
+-- testIdMatrix₂ = Refl
+
+testCompNat2₀ : compNat 2 0 == 2
+testCompNat2₀ = Refl
+
+testCompNat2₁ : compNat 2 1 == 1
+testCompNat2₁ = Refl
+
+testCompNat2₂ : compNat 2 2 == 0
+testCompNat2₂ = Refl
+
 
 testIdMatrix₀ : idMatrix {0} == Nil
 testIdMatrix₀ = Refl
@@ -48,8 +71,8 @@ testIdMatrix₁ : idMatrix {1} == Cons (Cons 1 Nil) Nil
 testIdMatrix₁ = Refl
 
 
-testIdMatrix₂ : idMatrix {2} == 
-    Cons (Cons Zero (Cons 1 Nil)) (
-    Cons (Cons 1 (Cons Zero Nil)) 
-    Nil)
-testIdMatrix₂ = Refl
+-- testIdMatrix₂ : idMatrix {2} == 
+--     Cons (Cons 1 (Cons Zero Nil)) (
+--     Cons (Cons Zero (Cons 1 Nil)) 
+--     Nil)
+-- testIdMatrix₂ = Refl
