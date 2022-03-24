@@ -230,9 +230,15 @@ Cons x xs !!v Succ i = xs !!v i
 
 -- Define matrix transposition
 transpose : {c r : Nat} {a : Set} -> Matrix a c r -> Matrix a r c
-transpose {c} {r} xss =  g xss c where 
+transpose {c} {r} xss =  g xss c where
+  f : {c r : Nat} {a : Set} -> Matrix a c r -> Nat -> Vec a r
+  f xss i = {!   !}
+
   g : {c r : Nat} {a : Set} -> Matrix a c r -> (cᵢ : Nat) -> Matrix a r cᵢ 
-  g = {!   !}
+  g {c} {r} xss Zero = Nil
+  g {c} {r} xss (Succ cᵢ) = Cons (f xss (compNat c cᵢ)) (g xss cᵢ)
+  
+  
   
 ----------------------
 ----- Exercise 3 -----
