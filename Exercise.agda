@@ -232,7 +232,12 @@ Cons x xs !!v Succ i = xs !!v i
 transpose : {c r : Nat} {a : Set} -> Matrix a c r -> Matrix a r c
 transpose {c} {r} xss =  g xss c where
   f : {c r : Nat} {a : Set} -> Matrix a c r -> Nat -> Vec a r
-  f xss i = {!   !}
+  f Nil i = Nil
+  f (Cons xs xss) i 
+   with xs !!v i 
+  ... | Just x = Cons x (f xss i)
+  -- ? why does Agda not realize it's unreachable
+  ... | Nothing = f (Cons xs xss) (compNat i i)
 
   g : {c r : Nat} {a : Set} -> Matrix a c r -> (cᵢ : Nat) -> Matrix a r cᵢ 
   g {c} {r} xss Zero = Nil
