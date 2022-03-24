@@ -10,6 +10,12 @@ testPure = Refl
 testPure2 : pure {2} {Bool} True == Cons True (Cons True Nil)
 testPure2 = Refl
 
+testMatrix : Matrix Bool 1 1
+testMatrix = Cons (Cons True Nil) Nil
+
+testMatrixEmpty : Matrix Bool 0 0
+testMatrixEmpty = Nil
+
 testZeroVec : zeroVec Zero == Nil
 testZeroVec = Refl
 
@@ -33,3 +39,17 @@ testIdVec2₂ = Refl
 
 testIdVec2₃ : idVec {2} 3 == Nothing
 testIdVec2₃ = Refl
+
+
+testIdMatrix₀ : idMatrix {0} == Nil
+testIdMatrix₀ = Refl
+
+testIdMatrix₁ : idMatrix {1} == Cons (Cons 1 Nil) Nil
+testIdMatrix₁ = Refl
+
+
+testIdMatrix₂ : idMatrix {2} == 
+    Cons (Cons Zero (Cons 1 Nil)) (
+    Cons (Cons 1 (Cons Zero Nil)) 
+    Nil)
+testIdMatrix₂ = Refl

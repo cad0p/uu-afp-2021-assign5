@@ -113,12 +113,6 @@ Matrix : Set -> Nat -> Nat -> Set
 -- n columns, m rows
 Matrix a n m = Vec (Vec a n) m 
 
-exampleMatrix : Matrix Bool 1 1
-exampleMatrix = Cons (Cons True Nil) Nil
-
-exampleMatrixEmpty : Matrix Bool 0 0
-exampleMatrixEmpty = Nil
-
 -- Define matrix addition
 madd : {n m : Nat} -> Matrix Nat m n -> Matrix Nat m n -> Matrix Nat m n
 -- there's nothing to add
@@ -141,7 +135,6 @@ zeroVec (Succ n) = Cons 0 (zeroVec n)
 idVec : {n : Nat} -> Nat -> Maybe (Vec Nat n)
 idVec {Zero} Zero = Just Nil
 idVec {Zero} (Succ i) = Nothing
--- idVec {1} 1 = Just (Cons 1 Nil)
 idVec {Succ n} Zero = Nothing
 idVec {Succ n} 1 = Just (Cons 1 (zeroVec n))
 idVec {Succ n} (Succ i) with idVec {n} i
@@ -151,18 +144,24 @@ idVec {Succ n} (Succ i) with idVec {n} i
 
 -- Define the identity matrix
 idMatrix : {n : Nat} -> Matrix Nat n n
-idMatrix {n} = helper n n where 
-  -- the actual row is n - row, same for columns
-  helper : (r c : Nat) -> Matrix Nat c r
-  helper Zero c = {!   !}
-  helper (Succ r) c = {!   !}  
+idMatrix {n} = helper n where 
+  -- r row is actually n - row
+  -- n is the number of columns
+  helper : (r : Nat) -> Matrix Nat n r
+  helper Zero = Nil
+  helper (Succ r) with idVec {n} (Succ r)
+  ... | Just x = Cons x (helper r)
+  -- the case below is actually unreachable
+  -- ? why doesn't Agda tell us?
+  ... | Nothing = Cons (zeroVec n) (helper r)
+  -- helper (Succ r) = {!   !}  
 
 
 
 
 -- ? we need to define stuff before, cannot reference after?
 
--- ? why can't we overload the plus?
+-- ?v why can't we overload the plus?
 -- we can with general typing
 
 
