@@ -285,6 +285,15 @@ so False = ⊥
 ≤-soundness {Zero} {m} {p} = Base
 ≤-soundness {Succ n} {Succ m} {p} = Step (≤-soundness {n} {m} {p})
 
+-- necessary for the new g in transpose
+proof-n≤n : {n : Nat} -> n ≤ n
+proof-n≤n {Zero} = Base
+proof-n≤n {Succ n} = Step proof-n≤n
+
+-- also that n ≤ m → n ≤ Succ m
+proof-n≤Succm : {n m : Nat} -> n ≤ m → n ≤ Succ m
+proof-n≤Succm {Zero} {m} p = Base
+proof-n≤Succm {Succ n} {Succ m} (Step p) = Step (proof-n≤Succm p)
 
 -- so now we will redefine !!v
 -- now taking a proof instead of the maybe construct
@@ -297,6 +306,22 @@ _!!v_st_ : {n : Nat} {a : Set} -> Vec a n -> (i : Nat) -> Succ i ≤ n -> a
 _!!v_ : {n i : Nat} {a : Set} -> Vec a n -> Succ i ≤ n -> a 
 _!!v_ {.(Succ _)} {Zero} (Cons x xs) p = x
 _!!v_ {.(Succ _)} {Succ i} (Cons x xs) (Step p) = xs !!v p
+
+-- now we can define a better transpose
+transpose : {c r : Nat} {a : Set} -> Matrix a c r -> Matrix a r c
+transpose {Zero} xss = Nil
+-- weird case
+transpose {Succ c} Nil = Cons Nil (transpose {c} Nil)
+transpose {Succ c} (Cons xs xss) = g (Cons xs xss) 
+    (Step (proof-n≤n {c})) where
+  f : {c r i : Nat} {a : Set} -> Matrix a c r -> Succ i ≤ c -> Vec a r
+  f {i} Nil p = Nil
+  f {i} (Cons xs xss) p = Cons (xs !!v p) (f xss p) 
+
+  g : {c r cᵢ : Nat} {a : Set} -> Matrix a c r ->  cᵢ ≤ c -> Matrix a r cᵢ 
+  g {c} {r} {Zero} xss p = Nil
+  g {.(Succ _)} {r} {Succ cᵢ} xss (Step p) = 
+    Cons (f xss (Step p)) (g xss (proof-n≤Succm p))
   
 ----------------------
 ----- Exercise 3 -----
