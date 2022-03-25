@@ -93,9 +93,13 @@ matrix3₃ =
     Nil))
 
 
-testTranspose3₃ : transpose matrix3₃ == 
+testTranspose3₃ : transpose-dumb matrix3₃ == 
     Cons (Cons 1 (Cons 4 (Cons 7 Nil))) (
     Cons (Cons 2 (Cons 5 (Cons 8 Nil))) (
     Cons (Cons 3 (Cons 6 (Cons 9 Nil))) 
     Nil))
 testTranspose3₃ = Refl
+
+
+test-!!v : (Cons 1 Nil !!v Zero st ≤-soundness) == 1
+test-!!v = Refl

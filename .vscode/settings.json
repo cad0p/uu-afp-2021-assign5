@@ -1,0 +1,8 @@
+{
+  "editor.unicodeHighlight.allowedCharacters": {
+    "ℕ": true,
+    "⊤": true,
+    "∨": true,
+    "σ": true
+  }
+}

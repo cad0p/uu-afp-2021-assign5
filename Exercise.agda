@@ -222,21 +222,19 @@ idMatrix {n} = helper n where
 -}
 
 -- Define !! for vectors to get the index
-_!!v_ : {n : Nat} {a : Set} -> Vec a n -> Nat -> Maybe a
-Nil !!v i = Nothing
-Cons x xs !!v Zero = Just x
-Cons x xs !!v Succ i = xs !!v i
-
-
+_!!v-dumb_ : {n : Nat} {a : Set} -> Vec a n -> Nat -> Maybe a
+Nil !!v-dumb i = Nothing
+Cons x xs !!v-dumb Zero = Just x
+Cons x xs !!v-dumb Succ i = xs !!v-dumb i
 
 
 -- Define matrix transposition
-transpose : {c r : Nat} {a : Set} -> Matrix a c r -> Matrix a r c
-transpose {c} {r} xss =  g xss c where
+transpose-dumb : {c r : Nat} {a : Set} -> Matrix a c r -> Matrix a r c
+transpose-dumb {c} {r} xss = g xss c where
   f : {c r : Nat} {a : Set} -> Matrix a c r -> Nat -> Vec a r
   f Nil i = Nil
   f (Cons xs xss) i 
-   with xs !!v i 
+   with xs !!v-dumb i 
   ... | Just x = Cons x (f xss i)
   -- ? why does Agda not realize it's unreachable
   ... | Nothing with xs
@@ -249,8 +247,53 @@ transpose {c} {r} xss =  g xss c where
   g : {c r : Nat} {a : Set} -> Matrix a c r -> (cᵢ : Nat) -> Matrix a r cᵢ 
   g {c} {r} xss Zero = Nil
   g {c} {r} xss (Succ cᵢ) = Cons (f xss (compNat c (Succ cᵢ))) (g xss cᵢ)
-  
-  
+
+-- ok so i tried with !! but
+-- let's make it into a total function
+
+-- first we need empty and not empty constructors
+record ⊤ : Set where
+  constructor tt
+
+data ⊥ : Set where
+
+
+-- then we need to define ≤
+data _≤_ : Nat -> Nat -> Set where
+  Base : {m : Nat} -> Zero ≤ m
+  Step : {n m : Nat} -> n ≤ m -> Succ n ≤ Succ m
+
+
+-- now the idea is to define a soundness function for ≤
+
+-- first we define a bool function
+_≤?_ : Nat -> Nat -> Bool
+Zero ≤? m = True
+Succ n ≤? Zero = False
+Succ n ≤? Succ m = n ≤? m
+
+-- then we convert this to a Set
+-- wanted to call this BoolToSet but so also works so so
+so : Bool -> Set
+so True = ⊤
+so False = ⊥
+
+
+-- then we can define the soundness!
+-- that automatically constructs the proof..
+≤-soundness : {n m : Nat} -> {p : so (n ≤? m)} -> n ≤ m
+≤-soundness {Zero} {m} {p} = Base
+≤-soundness {Succ n} {Succ m} {p} = Step (≤-soundness {n} {m} {p})
+
+
+-- so now we will redefine !!v
+-- now taking a proof instead of the maybe construct
+_!!v_st_ : {n : Nat} {a : Set} -> Vec a n -> (i : Nat) -> Succ i ≤ n -> a 
+-- st stands for such that
+(Cons x xs) !!v Zero     st p        = x
+(Cons x xs) !!v (Succ i) st (Step p) = xs !!v i st p
+
+
   
 ----------------------
 ----- Exercise 3 -----

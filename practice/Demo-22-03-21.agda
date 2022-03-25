@@ -3,7 +3,7 @@ module Demo-22-03-21 where
 import Demo-22-03-14
 open Demo-22-03-14
 
-import Demo-22-03-16
+import Demo-22-03-16 hiding (Empty)
 open Demo-22-03-16
 
 head : (default : a) → List a -> a
@@ -95,12 +95,44 @@ testLookup₁ : lookup₁
   (cons 10 (cons 1 (cons zero (cons 9 nil)))) 1 (step base) (step base) ≡ 10
 testLookup₁ = refl 
 
-lookup₀ : (xs : List a) → (n : ℕ) → succ n ≤ (length xs) → a
-lookup₀ (cons x xs) zero pre = x
-lookup₀ (cons x xs) (succ n) (step pre) = lookup₀ xs n pre
+lookup : (xs : List a) → (n : ℕ) → succ n ≤ (length xs) → a
+lookup (cons x xs) zero pre = x
+lookup (cons x xs) (succ n) (step pre) = lookup xs n pre
 
 
 -- haha this one works way better lol
-testLookup₀ : lookup₀ 
+testLookup : lookup 
   (cons 10 (cons 1 (cons zero (cons 9 nil)))) 0 (step base) ≡ 10
-testLookup₀ = refl
+testLookup = refl
+
+
+testLookupLong : lookup 
+  (cons 10 (cons 1 (cons zero (cons 9 nil)))) 2 (step (step (step base))) ≡ zero
+testLookupLong = refl
+
+
+_≤?_ : ℕ -> ℕ -> Bool
+zero ≤? m = true
+succ n ≤? zero = false
+succ n ≤? succ m = n ≤? m
+
+record ⊤ : Set where
+  constructor tt
+
+-- redefining Empty:
+data ⊥ : Set where
+
+So : Bool → Set
+So true = ⊤
+So false = ⊥
+
+≤-soundness : {n m : ℕ} → {p : So (n ≤? m)} → n ≤ m
+≤-soundness {zero} {m} = base
+≤-soundness {succ n} {succ m} {b} = step (≤-soundness {n} {m} {b})
+
+
+testLookupSmart : lookup 
+  ((cons 10 (cons 1 (cons zero (cons 9 nil))))) 2 ≤-soundness ≡ zero
+testLookupSmart = refl
+
+
