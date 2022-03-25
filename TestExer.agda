@@ -130,8 +130,8 @@ test-!!v2₃ : (Cons 1 (Cons 2 Nil) !!v ≤-soundness {3}) == {!   !}
 test-!!v2₃ = Refl
 
 testTranspose3₃ : transpose matrix3₃ == 
-    Cons (Cons 3 (Cons 6 (Cons 9 Nil))) (
+    Cons (Cons 1 (Cons 4 (Cons 7 Nil))) (
     Cons (Cons 2 (Cons 5 (Cons 8 Nil))) (
-    Cons (Cons 1 (Cons 4 (Cons 7 Nil))) 
+    Cons (Cons 3 (Cons 6 (Cons 9 Nil))) 
     Nil))
 testTranspose3₃ = Refl

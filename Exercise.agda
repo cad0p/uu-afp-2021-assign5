@@ -295,6 +295,13 @@ proof-n≤Succm : {n m : Nat} -> n ≤ m → n ≤ Succ m
 proof-n≤Succm {Zero} {m} p = Base
 proof-n≤Succm {Succ n} {Succ m} (Step p) = Step (proof-n≤Succm p)
 
+-- last proof needed: n ≤ m → compNat m n ≤ m
+proofCompNat : {n m : Nat} -> n ≤ m -> compNat m n ≤ m
+proofCompNat {Zero} {Zero} Base = Base
+proofCompNat {Zero} {Succ m} Base = Step proof-n≤n
+proofCompNat {Succ n} {.(Succ _)} (Step p) = 
+  let ih = proofCompNat p in proof-n≤Succm ih
+
 -- so now we will redefine !!v
 -- now taking a proof instead of the maybe construct
 _!!v_st_ : {n : Nat} {a : Set} -> Vec a n -> (i : Nat) -> Succ i ≤ n -> a 
@@ -321,7 +328,7 @@ transpose {Succ c} (Cons xs xss) = g (Cons xs xss)
   g : {c r cᵢ : Nat} {a : Set} -> Matrix a c r ->  cᵢ ≤ c -> Matrix a r cᵢ 
   g {c} {r} {Zero} xss p = Nil
   g {.(Succ _)} {r} {Succ cᵢ} xss (Step p) = 
-    Cons (f xss (Step p)) (g xss (proof-n≤Succm p))
+    Cons (f xss (Step (proofCompNat p))) (g xss (proof-n≤Succm p))
   
 ----------------------
 ----- Exercise 3 -----
