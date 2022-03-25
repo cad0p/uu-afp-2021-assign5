@@ -92,6 +92,12 @@ matrix3₃ =
     Cons (Cons 7 (Cons 8 (Cons 9 Nil))) 
     Nil))
 
+matrix3₂ : Matrix Nat 3 2
+matrix3₂ = 
+    Cons (Cons 1 (Cons 2 (Cons 3 Nil)))(
+    Cons (Cons 4 (Cons 5 (Cons 6 Nil))) 
+    Nil)
+
 
 testTranspose3₃-dumb : transpose-dumb matrix3₃ == 
     Cons (Cons 1 (Cons 4 (Cons 7 Nil))) (
@@ -135,3 +141,11 @@ testTranspose3₃ : transpose matrix3₃ ==
     Cons (Cons 3 (Cons 6 (Cons 9 Nil))) 
     Nil))
 testTranspose3₃ = Refl
+
+-- test that it works correctly on non-square matrices
+testTranspose3₂ : transpose matrix3₂ == 
+    Cons (Cons 1 (Cons 4 Nil)) (
+    Cons (Cons 2 (Cons 5 Nil)) (
+    Cons (Cons 3 (Cons 6 Nil)) 
+    Nil))
+testTranspose3₂ = Refl
