@@ -74,6 +74,7 @@ proof≤succ {succ n} {succ m} (step p) =
 proofLower≤Same : {n m : ℕ} → succ n ≤ m → n ≤ m
 proofLower≤Same {zero} {.(succ _)} (step p) = base
 proofLower≤Same {succ n} {.(succ _)} (step p) = step (proofLower≤Same p)
+-- actually I don't need anything lol
 
 
 -- better way to make this function total: lookup!
@@ -81,9 +82,25 @@ proofLower≤Same {succ n} {.(succ _)} (step p) = step (proofLower≤Same p)
 -- pre is a precondition: an extra proof that we need to pass in
 -- to guarantee that we are not calling any out of bounds lookup
 -- coming back to this: we also have to say that it's strictly lower
-lookup : (xs : List a) → (n : ℕ) → 1 ≤ n → n ≤ length xs → a
-lookup nil  zero    ()   pre₂
-lookup nil (succ n) pre₁ ()
-lookup (cons x xs) (succ zero) (step base) (step base) = x
-lookup (cons x xs) (succ (succ n)) (step pre₁) (step pre₂) = 
-  lookup xs (succ (n)) (step base) pre₂
+lookup₁ : (xs : List a) → (n : ℕ) → 1 ≤ n → n ≤ length xs → a
+lookup₁ nil  zero    ()   pre₂
+lookup₁ nil (succ n) pre₁ ()
+lookup₁ (cons x xs) (succ zero) (step base) (step base) = x
+lookup₁ (cons x xs) (succ (succ n)) (step pre₁) (step pre₂) = 
+  lookup₁ xs (succ (n)) (step base) pre₂
+
+
+-- this one has indexing from 1!
+testLookup₁ : lookup₁ 
+  (cons 10 (cons 1 (cons zero (cons 9 nil)))) 1 (step base) (step base) ≡ 10
+testLookup₁ = refl 
+
+lookup₀ : (xs : List a) → (n : ℕ) → succ n ≤ (length xs) → a
+lookup₀ (cons x xs) zero pre = x
+lookup₀ (cons x xs) (succ n) (step pre) = lookup₀ xs n pre
+
+
+-- haha this one works way better lol
+testLookup₀ : lookup₀ 
+  (cons 10 (cons 1 (cons zero (cons 9 nil)))) 0 (step base) ≡ 10
+testLookup₀ = refl

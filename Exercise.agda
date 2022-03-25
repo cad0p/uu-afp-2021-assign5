@@ -227,10 +227,7 @@ Nil !!v i = Nothing
 Cons x xs !!v Zero = Just x
 Cons x xs !!v Succ i = xs !!v i
 
--- -- apparently we have to define a mock vector for when
--- -- unreachable Nothing cases appear..
--- -- it will contain the first column, which we know it's there for sure..
--- mockVec {a : Set} -> Cons 
+
 
 
 -- Define matrix transposition
