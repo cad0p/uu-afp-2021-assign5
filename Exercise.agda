@@ -293,7 +293,10 @@ _!!v_st_ : {n : Nat} {a : Set} -> Vec a n -> (i : Nat) -> Succ i ≤ n -> a
 (Cons x xs) !!v Zero     st p        = x
 (Cons x xs) !!v (Succ i) st (Step p) = xs !!v i st p
 
-
+-- but can we do better?
+_!!v_ : {n i : Nat} {a : Set} -> Vec a n -> Succ i ≤ n -> a 
+_!!v_ {.(Succ _)} {Zero} (Cons x xs) p = x
+_!!v_ {.(Succ _)} {Succ i} (Cons x xs) (Step p) = xs !!v p
   
 ----------------------
 ----- Exercise 3 -----

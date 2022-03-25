@@ -101,5 +101,30 @@ testTranspose3₃ : transpose-dumb matrix3₃ ==
 testTranspose3₃ = Refl
 
 
-test-!!v : (Cons 1 Nil !!v Zero st ≤-soundness) == 1
-test-!!v = Refl
+test-xs-!!v-i-st-p : (Cons 1 Nil !!v Zero st ≤-soundness) == 1
+test-xs-!!v-i-st-p = Refl
+
+-- this correctly fails with the wrong proof!
+-- and it's also 1-indexed this way
+test-!!v1₂ : (Cons 1 Nil !!v ≤-soundness {2}) == {!   !}
+test-!!v1₂ = Refl
+
+-- this correctly fails with the wrong proof!
+-- and it's also 1-indexed this way
+test-!!v1₁ : (Cons 1 Nil !!v ≤-soundness {1}) == 1
+test-!!v1₁ = Refl
+
+-- this correctly fails with the wrong proof!
+-- and it's also 1-indexed this way
+-- in fact this fails!
+-- test-!!v1₀ : (Cons 1 Nil !!v ≤-soundness {0}) == 1
+-- test-!!v1₀ = Refl
+
+test-!!v2₁ : (Cons 1 (Cons 2 Nil) !!v ≤-soundness {1}) == 1
+test-!!v2₁ = Refl
+
+test-!!v2₂ : (Cons 1 (Cons 2 Nil) !!v ≤-soundness {2}) == 2
+test-!!v2₂ = Refl
+
+test-!!v2₃ : (Cons 1 (Cons 2 Nil) !!v ≤-soundness {3}) == {!   !}
+test-!!v2₃ = Refl
