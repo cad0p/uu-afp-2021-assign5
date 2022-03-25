@@ -244,6 +244,7 @@ transpose {c} {r} xss =  g xss c where
   -- ? why does Agda not realize it's unreachable
   ... | Nothing with xs
             -- no solution here
+            -- haha it seems that it doesn't complain with leaving it like this
   ...              | Nil = Cons {!   !} {!   !}
             -- i guess just take the first element then
   ...              | Cons x₁ xs₁ = Cons x₁ (f xss i)
