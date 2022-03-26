@@ -502,16 +502,28 @@ trans : {a : Set} {x y z : a} -> x == y -> y == z -> x == z
 trans Refl Refl = Refl
 
 plusZero : (n : Nat) -> (n + 0) == n
-plusZero = {!!}
+plusZero n = sym n==n+0
 
 plusSucc : (n m : Nat) -> Succ (n + m) == (n + Succ m)
-plusSucc = {!!}
+plusSucc n m = sym +associativity
 
 plusCommutes : (n m : Nat) -> (n + m) == (m + n)
-plusCommutes = {!!}
+plusCommutes n m = commutes-n+m {n} {m}
 
 distributivity : (n m k : Nat) -> (n * (m + k)) == ((n * m) + (n * k))
-distributivity = {!!}
+distributivity Zero m k = Refl
+distributivity (Succ n) Zero Zero = distributivity n Zero Zero
+distributivity (Succ n) Zero (Succ k) = 
+  let ih = distributivity n Zero (Succ k) in 
+  -- also here it differs by k
+    {!  !}
+distributivity (Succ n) (Succ m) Zero = 
+  let ih = distributivity n (Succ m) Zero in 
+    -- this one differs by -m (not sure how to prove here)
+    cong Succ ({!   !})
+distributivity (Succ n) (Succ m) (Succ k) = 
+  let ih = distributivity n m k in 
+    cong Succ {!   !}
 
 ----------------------
 ----- Exercise 6 -----

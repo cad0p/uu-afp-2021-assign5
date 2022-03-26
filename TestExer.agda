@@ -178,3 +178,11 @@ testForget-difficult = Refl
 
 testForget : forget (Fs (Fs Fz)) == 3
 testForget = Refl
+
+
+----------------------
+----- Exercise 4 -----
+----------------------
+
+
+-- a mess, no tests
