@@ -162,6 +162,9 @@ testCraftFin1 = Refl
 testCraftFin2 : craftFin {2} {≤-soundness} == Fs Fz
 testCraftFin2 = Refl
 
+testCraftFin3 : craftFin {3} {≤-soundness} == Fs (Fs Fz)
+testCraftFin3 = Refl
+
 
 testPlan1 : plan {1} == Cons Fz Nil
 testPlan1 = Refl
@@ -169,3 +172,9 @@ testPlan1 = Refl
 -- not sure if this is what we want though
 testPlan2 : plan {2} == Cons (Fs Fz) (Cons (Fs Fz) Nil)
 testPlan2 = Refl
+
+testForget-difficult : forget-difficult {3} (Fs (Fs Fz)) == 3
+testForget-difficult = Refl
+
+testForget : forget (Fs (Fs Fz)) == 3
+testForget = Refl

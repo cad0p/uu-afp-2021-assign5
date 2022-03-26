@@ -363,9 +363,23 @@ plan {Succ n} =
     (craftFin {Succ n} {pₙ}) 
     (f {Succ n} {m} {pₙ} {proof-n≤Succm pₘ})
 
+
+-- for forget, we have to define a function that 
+-- has one more parameter to keep track of the number
+-- by counting upwards
+
+
 -- Define a forgetful map, mapping Fin to Nat
+forget-difficult : {n : Nat} -> Fin n -> Nat
+forget-difficult {Succ n} fi = f (Succ n) 0 fi where
+  f : (n i : Nat) -> Fin n -> Nat
+  f (Succ n) i Fz = Succ i
+  f (Succ n) i (Fs fi)= f n (Succ i) fi
+
+-- also, more simply:
 forget : {n : Nat} -> Fin n -> Nat
-forget = {!!}
+forget {Succ n} fi = Succ n
+
 
 -- There are several ways to embed Fin n in Fin (Succ n).  Try to come
 -- up with one that satisfies the correctness property below (and
