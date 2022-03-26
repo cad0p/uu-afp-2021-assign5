@@ -149,3 +149,23 @@ testTranspose3₂ : transpose matrix3₂ ==
     Cons (Cons 3 (Cons 6 Nil)) 
     Nil))
 testTranspose3₂ = Refl
+
+
+----------------------
+----- Exercise 3 -----
+----------------------
+
+
+testCraftFin1 : craftFin {1} {≤-soundness} == Fz
+testCraftFin1 = Refl
+
+testCraftFin2 : craftFin {2} {≤-soundness} == Fs Fz
+testCraftFin2 = Refl
+
+
+testPlan1 : plan {1} == Cons Fz Nil
+testPlan1 = Refl
+
+-- not sure if this is what we want though
+testPlan2 : plan {2} == Cons (Fs Fz) (Cons (Fs Fz) Nil)
+testPlan2 = Refl

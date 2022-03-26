@@ -339,10 +339,29 @@ transpose {Succ c} (Cons xs xss) = g (Cons xs xss)
 
 -- Define a few functions manipulating finite types.
 
+
+-- ok so this needs an helper that crafts
+-- Fs (Fs (Fs (Fz))) etc for us
+-- actually we need one that allows for recursion
+-- and that has type 
+craftFin : {n : Nat} {p : 1 ≤ n} -> Fin (n)
+craftFin {Succ Zero} = Fz
+craftFin {Succ (Succ n)} {Step p} = 
+  Fs (craftFin {Succ n} {Step Base})
+
+-- after this i need the helper function to be called
+
 -- The result of "plan {n}" should be a vector of length n storing all
 -- the inhabitants of Fin n in increasing order.
 plan : {n : Nat} -> Vec (Fin n) n
-plan = {! !}
+plan {Zero} = Nil
+plan {Succ n} = 
+  f {Succ n} {Succ n} {≤-soundness} {Step proof-n≤n} where
+  f : {n m : Nat} {pₙ : 1 ≤ n} {pₘ : m ≤ n}-> Vec (Fin n) m
+  f {Succ n} {Zero} = Nil
+  f {Succ n} {Succ m} {pₙ} {Step pₘ} = Cons 
+    (craftFin {Succ n} {pₙ}) 
+    (f {Succ n} {m} {pₙ} {proof-n≤Succm pₘ})
 
 -- Define a forgetful map, mapping Fin to Nat
 forget : {n : Nat} -> Fin n -> Nat
