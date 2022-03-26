@@ -603,6 +603,8 @@ SubListAntiSymNat Base sl₂ = Refl
 SubListAntiSymNat {xs} {ys} (Keep sl₁) sl₂ = {! xs ==?lNat ys  !}
 SubListAntiSymNat (Drop sl₁) sl₂ = {!   !}
 
+-- here I tried and I failed on doing it even only for Nat
+
 
 ----------------------
 ----- Exercise 7 -----
@@ -610,18 +612,25 @@ SubListAntiSymNat (Drop sl₁) sl₂ = {!   !}
 
 -- Define the constructors of a data type 
 data LEQ : Nat -> Nat -> Set where
+  Base : {n : Nat} -> LEQ Zero n
+  Step : {n m : Nat} -> LEQ n m -> LEQ (Succ n) (Succ m)
 
 -- (Alternative correct definitions exist - this one is the easiest to
 -- work with for the rest of this exercise)
 
 leqRefl : (n : Nat) -> LEQ n n
-leqRefl = {!!}
+leqRefl Zero = Base
+leqRefl (Succ n) = Step (leqRefl n)
 
 leqTrans : {n m k : Nat} -> LEQ n m -> LEQ m k -> LEQ n k
-leqTrans = {!!}
+leqTrans Base ₘ≤ₖ = Base
+leqTrans (Step ₙ≤ₘ) (Step ₘ≤ₖ) = 
+  let ih = leqTrans ₙ≤ₘ ₘ≤ₖ in 
+    Step ih
 
 leqAntiSym : {n m : Nat} -> LEQ n m -> LEQ m n -> n == m
-leqAntiSym = {!!}
+leqAntiSym Base Base = Refl
+leqAntiSym (Step ₙ≤ₘ) (Step ₘ≤ₙ) = cong Succ (leqAntiSym ₙ≤ₘ ₘ≤ₙ)
 
 -- Given the following function:
 _<=_ : Nat -> Nat -> Bool
