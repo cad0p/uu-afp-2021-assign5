@@ -41,7 +41,7 @@ data Vec (a : Set) : Nat -> Set where
   Nil : Vec a 0
   Cons : {n : Nat} -> (x : a) -> (xs : Vec a n) -> Vec a (Succ n)
 
-head : {a : Set} {n : Nat}-> Vec a (Succ n) -> a
+head : {a : Set} {n : Nat} -> Vec a (Succ n) -> a
 head (Cons x xs) = x
 
 append : {a : Set} {n m : Nat} -> Vec a n -> Vec a m -> Vec a (n + m)
@@ -54,8 +54,10 @@ data _==_ {a : Set} (x : a) : a -> Set where
 cong : {a b : Set} {x y : a} -> (f : a -> b) -> x == y -> f x == f y
 cong f Refl = Refl
 
-data Unit : Set where
-  unit : Unit
+-- data Unit : Set where
+--   unit : Unit
+record Unit : Set where
+  constructor unit
 
 data Empty : Set where
 
@@ -251,11 +253,12 @@ transpose-dumb {c} {r} xss = g xss c where
 -- ok so i tried with !! but
 -- let's make it into a total function
 
--- first we need empty and not empty constructors
-record ⊤ : Set where
-  constructor tt
+-- first we need empty and unit constructors
+-- edit: they were already defined, skipping
+-- record ⊤ : Set where
+--   constructor tt
 
-data ⊥ : Set where
+-- data ⊥ : Set where
 
 
 -- then we need to define ≤
@@ -275,8 +278,8 @@ Succ n ≤? Succ m = n ≤? m
 -- then we convert this to a Set
 -- wanted to call this BoolToSet but so also works so so
 so : Bool -> Set
-so True = ⊤
-so False = ⊥
+so True = Unit
+so False = Empty
 
 
 -- then we can define the soundness!
@@ -339,7 +342,7 @@ transpose {Succ c} (Cons xs xss) = g (Cons xs xss)
 -- The result of "plan {n}" should be a vector of length n storing all
 -- the inhabitants of Fin n in increasing order.
 plan : {n : Nat} -> Vec (Fin n) n
-plan = {!!}
+plan = {! !}
 
 -- Define a forgetful map, mapping Fin to Nat
 forget : {n : Nat} -> Fin n -> Nat
