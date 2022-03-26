@@ -537,13 +537,71 @@ data SubList {a : Set} : List a -> List a -> Set where
   Drop : forall {y zs ys} -> SubList zs ys -> SubList zs (Cons y ys)
 
 SubListRefl : {a : Set} {xs : List a} -> SubList xs xs
-SubListRefl = {!!}
+SubListRefl {a} {Nil} = Base
+SubListRefl {a} {Cons x xs} = Keep SubListRefl
 
 SubListTrans : {a : Set} {xs ys zs : List a} -> SubList xs ys -> SubList ys zs -> SubList xs zs
-SubListTrans = {!!}
+SubListTrans Base sl₂ = sl₂
+SubListTrans (Keep sl₁) (Keep sl₂) = Keep (SubListTrans sl₁ sl₂)
+SubListTrans (Keep sl₁) (Drop sl₂) = Drop (SubListTrans (Keep sl₁) sl₂)
+SubListTrans (Drop sl₁) (Keep sl₂) = Drop (SubListTrans sl₁ sl₂)
+SubListTrans (Drop sl₁) (Drop sl₂) = 
+  Drop (SubListTrans sl₁ {! sl₂  !})
+
+
+-- ok we need also and:
+-- _∧_ : {a : Set} {x y : a} -> x == y -> Bool -> Bool
+-- Refl ∧ True   = True
+-- Refl ∧ False  = False
+
+
+
+-- how do I prove that two list are equal?
+-- I just check each element
+_==?l_ : {a : Set} -> List a -> List a -> Bool
+Nil ==?l Nil = True
+Nil ==?l Cons x ys = False
+Cons x xs ==?l Nil = False
+Cons x xs ==?l Cons y ys =  {! (x == y) ∧ (xs ==?l ys) !}
+
 
 SubListAntiSym : {a : Set} {xs ys : List a} ->  SubList xs ys -> SubList ys xs -> xs == ys
-SubListAntiSym = {!!}
+SubListAntiSym Base sl₂ = Refl
+SubListAntiSym {a} {xs} {ys} (Keep sl₁) (Keep sl₂) = {!   !}
+SubListAntiSym (Keep sl₁) (Drop sl₂) = {!   !}
+SubListAntiSym (Drop sl₁) sl₂ = {!   !}
+
+-- ok I can't do it in general because I can't prove the equality of x == y
+-- for each set
+
+_∧_ : Bool -> Bool -> Bool
+True ∧ b₂ = b₂
+False ∧ b₂ = False
+
+
+_==?_ : Nat -> Nat -> Bool
+Zero ==? Zero = True
+Zero ==? Succ y = False
+Succ x ==? y = x ==? y
+
+-- but I can build a version that works for Nat
+_==?lNat_ : List Nat -> List Nat -> Bool
+Nil ==?lNat Nil = True
+Nil ==?lNat Cons x ys = False
+Cons x xs ==?lNat Nil = False
+Cons x xs ==?lNat Cons y ys =  (x ==? y) ∧ (xs ==?lNat ys)
+
+
+_==lNat_ : (xs ys : List Nat) -> {p : so (xs ==?lNat ys)} -> xs == ys
+(Nil ==lNat Nil) {p} = Refl
+(Cons x xs ==lNat Cons y ys) {p} = {! (xs ==lNat ys) {p} !}
+
+
+
+SubListAntiSymNat : {xs ys : List Nat} ->  SubList xs ys -> SubList ys xs -> xs == ys
+SubListAntiSymNat Base sl₂ = Refl
+SubListAntiSymNat {xs} {ys} (Keep sl₁) sl₂ = {! xs ==?lNat ys  !}
+SubListAntiSymNat (Drop sl₁) sl₂ = {!   !}
 
 
 ----------------------
