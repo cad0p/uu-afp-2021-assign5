@@ -641,10 +641,12 @@ Succ x <= Succ y = x <= y
 -- Now show that this function behaves as the LEQ data type
 
 leq<= : {n m : Nat} -> LEQ n m -> (n <= m) == True
-leq<= = {!!}
+leq<= Base = Refl
+leq<= (Step ₙ≤ₘ) = leq<= ₙ≤ₘ
 
 <=leq : (n m : Nat) -> (n <= m) == True -> LEQ n m
-<=leq = {!!} 
+<=leq Zero m Refl = Base
+<=leq (Succ n) (Succ m) p = Step (<=leq n m p) 
 
 ----------------------
 ----- Exercise 8 -----
