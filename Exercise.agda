@@ -385,10 +385,15 @@ forget {Succ n} fi = Succ n
 -- up with one that satisfies the correctness property below (and
 -- prove that it does).
 embed : {n : Nat} -> Fin n -> Fin (Succ n)
-embed = {!!}
+embed {Succ n} fi = Fs fi
 
 correct : {n : Nat} -> (i : Fin n) -> forget i == forget (embed i)
-correct = {!!}
+correct {n} fi = {!   !}
+
+-- here the goal is 'forget fi == Succ n'
+-- but actually fi is a 'Fin n', so it should have 'n'
+-- as result of 'forget fi'
+-- so it's not correct, probably I have misunderstood Fin
 
 ----------------------
 ----- Exercise 4 -----
