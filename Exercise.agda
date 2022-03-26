@@ -406,14 +406,87 @@ data Compare : Nat -> Nat -> Set where
   Equal : forall {n} -> Compare n n
   GreaterThan : forall {n} k -> Compare (n + Succ k) n
 
+-- for the covering function we need a helper function
+-- that counts the iterative calls
+
 -- Show that there is a 'covering function'
-cmp : (n m : Nat) -> Compare n m 
-cmp = {!!}
+cmp-nonRec : (n m : Nat) -> Compare n m 
+cmp-nonRec Zero Zero = Equal
+cmp-nonRec Zero (Succ m) = LessThan m
+cmp-nonRec (Succ n) Zero = GreaterThan n
+cmp-nonRec (Succ n) (Succ m) = {! cmp n m  !}
+
+
+n==n+0 : {n : Nat} -> n == (n + 0)
+n==n+0 {Zero} = Refl
+n==n+0 {Succ n} = cong Succ n==n+0
+
+=reflexivity : {a : Set} {x y : a} -> x == y -> y == x
+=reflexivity {a} {x} {.x} Refl = Refl
+
+n+1==Succn : {n : Nat} -> (n + 1) == Succ n
+n+1==Succn {Zero} = Refl
+n+1==Succn {Succ n} = cong Succ n+1==Succn
+
+
+-- now I need the proof that (n + Succ m) == Succ (n + m)
++associativity : {n m : Nat} -> (n + Succ m) == Succ (n + m)
++associativity {Zero} {m} = cong Succ Refl
++associativity {Succ n} {m} = 
+  let ih = +associativity {n} {m} in 
+    cong Succ ih
+
+
+-- tried to apply it below with no luck
++assGet : {n m : Nat} -> (n + Succ m) == Succ (n + m) -> Nat
++assGet {n} {m} p = Succ (n + m)
+
+
+n+Succm== : {n m : Nat} 
+  -> (n + m) == (m + n) -> (n + Succ m) == (m + Succ n)
+n+Succm== {Zero} {Zero} p = Refl
+-- here I need to prove that n+1==Succm
+n+Succm== {Zero} {Succ m} p = cong Succ (=reflexivity (n+1==Succn {m}))
+n+Succm== {Succ n} {Zero} p = cong Succ n+1==Succn
+n+Succm== {Succ n} {Succ m} p = 
+  let ih = n+Succm== {n} {m} in 
+    cong Succ {!   !}
+
+commutes-n+m : {n m : Nat} -> (n + m) == (m + n)
+commutes-n+m {Zero} {Zero} = Refl
+commutes-n+m {Succ n} {Zero} = 
+  cong Succ (=reflexivity (n==n+0 {n}))
+commutes-n+m {Zero} {Succ m} = cong Succ (n==n+0 {m})
+commutes-n+m {Succ n} {Succ m} = 
+  -- here we need proof that:
+  -- (n + m) == (m + n) -> (n + Succ m) == (m + Succ n)
+  let ih = commutes-n+m {n} {m} in 
+  cong Succ (n+Succm== ih)
+
+cmp : (n m : Nat) -> Compare n m
+cmp n m = f n m 0 (commutes-n+m {0} {m}) where
+  -- here Agda being stupid, cannot put (n + i)
+  -- because of how + is defined
+  -- maybe reflexivity could help..
+  f : (n m i : Nat) -> (i + m) == (m + i) -> Compare (i + n) (i + m)
+  -- and now cannot put this because it shows
+  -- now as Compare (i + 0) (i + 0)
+  -- while it wants Compare i i
+  f Zero Zero i p = {! Equal {i} !}
+  f Zero (Succ m) i p = {! LessThan {m + i}  !}
+  f (Succ n) Zero i p = {! GreaterThan {n + i}  !}
+  -- haha error: (i + Succ m) != (Succ (i + m)) of type Nat
+  f (Succ n) (Succ m) i p = {! f n m (Succ i) p  !}
 
 -- Use the cmp function you defined above to define the absolute
 -- difference between two natural numbers.
 difference : (n m : Nat) -> Nat
-difference = {!!}
+difference n m with cmp n m
+... | LessThan k = k
+... | Equal = 0
+... | GreaterThan k = k
+
+-- if only cmp worked..
 
 ----------------------
 ----- Exercise 5 -----
