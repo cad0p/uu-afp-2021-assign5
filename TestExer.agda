@@ -208,20 +208,26 @@ testCompilerValₘ = Refl
 
 -- now let's try with a zeroVec
 
-testCompilerValₙ-zeroVec4 : exec (compile (Val 1)) (zeroVec 4) == 
-    Cons 1    (
-    Cons Zero (
-    Cons Zero (
-    Cons Zero (
-    Cons Zero (
-    Cons Zero 
-    Nil)))))
+testCompilerValₙ-zeroVec4 : exec (
+    compile (Val 1)) (zeroVec 4) == 
+        
 testCompilerValₙ-zeroVec4 = Refl
 
 -- yay vreturn doesn't complain
-testCompilerValₘ-zeroVec4 : vreturn (Cons (eval (Val 1)) (zeroVec 4)) == 
+testCompilerValₘ-zeroVec4 : vreturn (
+    Cons (eval (Val 1)) (zeroVec 4)) == 
         Cons 1 (Cons Zero (Cons Zero (Cons Zero (Cons Zero Nil))))
 testCompilerValₘ-zeroVec4 = Refl
+
+testCompilerValₙ-zeroVec1 : exec 
+    (compile (Val 1)) (zeroVec 1) == 
+    {!   !}
+testCompilerValₙ-zeroVec1 = Refl
+
+-- yay vreturn doesn't complain
+testCompilerValₘ-zeroVec1 : vreturn (Cons (eval (Val 1)) (zeroVec 1)) == 
+        {!   !}
+testCompilerValₘ-zeroVec1 = Refl
 
 -- so from the above we conclude that 
 -- the compiler is correct for Val
