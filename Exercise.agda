@@ -761,12 +761,13 @@ oldStackSize {n} (ADD c) = Succ n
 
 -- not sure how to know the stack ending size
 -- Complete the following definition, executing a list of instructions
-exec : {n : Nat} -> (c : Cmd n) -> Stack (oldStackSize c) -> Stack n
+exec : {n m : Nat} -> (c : Cmd n) -> Stack (oldStackSize c) -> Stack n
 exec (HALT {n}) s = s
 -- oh, interesting, even though the type is Stack n -> Stack n
 -- here the goal is Stack (Succ n)
 -- which is what I wanted!
 -- actually, no, because also s now is of type Stack (Succ n)
+-- solved with oldStackSize
 exec (PUSH x c) s = Cons x s
 exec (ADD c) (Cons x (Cons x₁ s)) = Cons (x + x₁) s
 
@@ -782,14 +783,31 @@ exec (ADD c) (Cons x (Cons x₁ s)) = Cons (x + x₁) s
 -- exec (ADD c) (Cons x Nil) = {!   !}
 -- exec (ADD c) (Cons x (Cons x₁ s)) = {!   !}
 
--- -- Define a compiler from expresions to instructions
--- compile : Expr -> Cmd
--- compile e = {!!}
+-- Define a compiler from expresions to instructions
+compile : {n : Nat} -> Expr -> Cmd (Succ n)
+compile (Add e e₁) = ADD (PUSH (eval e₁) (compile e))
+compile (Val x) = PUSH x HALT
 
--- -- And prove your compiler correct
--- correctness : (e : Expr) (s : Stack) ->
+
+-- And prove your compiler correct
+-- correctness : (e : Expr)
+--     (s : Stack (oldStackSize (compile e))) ->
 --   Cons (eval e) s == exec (compile e) s
--- correctness e = {!!}
+-- correctness e = {! !}
+
+-- ok so the above I think doesn't work because == requires an
+-- expression on the left side (this is my understanding)
+-- ok no actually I don't know why it complains but I found
+-- a workaround below:
+
+-- And prove your compiler correct
+-- this one has oldStackSize as yellow and exec as red
+correctness : (e : Expr)
+    (s : Stack (oldStackSize (compile e))) ->
+    append Nil (Cons (eval e) s) == exec (compile e) s
+correctness e = {! !}
+
+
 
 --BONUS exercises: extend the language with new constructs for let
 --bindings, variables, new operators, mutable references, assignment,

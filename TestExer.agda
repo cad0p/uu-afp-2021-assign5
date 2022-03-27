@@ -186,3 +186,40 @@ testForget = Refl
 
 
 -- a mess, no tests
+
+
+
+----------------------
+----- Exercise 9 -----
+----------------------
+
+-- in order to understand what is meant by the correctness
+-- of the compiler, I will write here some tests
+
+-- n should be equal to m
+
+testCompilerValₙ : exec (compile (Val 1)) Nil == Cons 1 Nil
+testCompilerValₙ = Refl
+
+-- this he didn't like for some reason
+-- Cons (eval (Val 1)) Nil == {!   !}
+testCompilerValₘ : append Nil (Cons (eval (Val 1)) Nil) == Cons 1 Nil
+testCompilerValₘ = Refl
+
+-- so from the above we conclude that 
+-- the compiler is correct for Val
+
+
+-- let's try the add constructor
+
+addSimpleExpr : Expr
+addSimpleExpr = Add (Val 1) (Val 2)
+
+testCompilerAddSimpleₙ : 
+    exec (compile addSimpleExpr) Nil == ?
+testCompilerAddSimpleₙ = Refl
+
+
+testCompilerAddSimpleₘ : 
+    append Nil (Cons (eval addSimpleExpr) Nil) == Cons 3 Nil
+testCompilerAddSimpleₘ = Refl
