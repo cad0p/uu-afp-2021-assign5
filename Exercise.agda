@@ -739,7 +739,7 @@ eval (Val x) = x
 
 data Cmd : Nat -> Set where
   -- stop execution and return the current stack
-  HALT : {n : Nat} -> Cmd n 
+  HALT : {n : Nat} -> Cmd n
   -- push a new number on the stack
   PUSH : {n : Nat} -> Nat -> Cmd n -> Cmd (Succ n)
   -- replace the top two elements of the stack with their sum
@@ -759,23 +759,68 @@ oldStackSize {Succ n} (PUSH x c) = n
 oldStackSize {n} (ADD c) = Succ n
 
 
+-- I discovered through the correctness function how the
+-- compiler should behave, and that it can have any stack
+-- as input, not just a stack with a predefined size
+-- so instead of bounding the input i have to bound the output!
+-- previously it was:
+-- exec : {n : Nat} -> (c : Cmd n) -> Stack (oldStackSize n) -> Stack n
+
+
+-- this m is the old stack size
+newStackSize : {n : Nat} -> (c : Cmd n) -> Nat -> Nat
+newStackSize {Zero} HALT m = m
+-- I don't know honestly if this case below is possible
+newStackSize {Succ n} HALT m = {!   !}
+-- let's say I want to push something to a compiler of size n - 1
+-- then it becomes a compiler of size n
+-- but I already have a stack of size m
+-- so the result is just n + m
+newStackSize {n} (PUSH x c) m = n + m
+-- meanwhile here I want to add the top 2 of a compiler of size n + 1
+-- I get a compiler of size n (n >= 1)
+-- so basically it never consumes the existing stack
+newStackSize {n} (ADD c) m = n + m
+-- so we discovered that it's ac
+
+
+-- this is bonkers
+vecSuccAssoc : {a : Set} {n m : Nat} 
+  -> Vec a (n + Succ m) -> Vec a (Succ (n + m))
+vecSuccAssoc {a} {Zero} {m} v = v
+vecSuccAssoc {a} {Succ n} {m} (Cons x v) = Cons x (vecSuccAssoc v)
+-- same
+vecSuccDistr : {a : Set} {n m : Nat} 
+  -> Vec a (Succ (n + m)) -> Vec a (n + Succ m)
+vecSuccDistr {a} {Zero} {m} v = v
+vecSuccDistr {a} {Succ n} {m} (Cons x v) = Cons x (vecSuccDistr v)
+
+
+-- Complete the following definition, executing a list of instructions
+exec : {n m : Nat} -> (c : Cmd n) -> Stack m -> Stack (m + n)
+-- for the same doubt explained above i'm mocking a vector.
+exec {n} HALT s = append s (zeroVec n)
+exec (PUSH x c) s = vecSuccDistr (Cons x (exec c s))
+exec (ADD c) s = {! c  !}
+
+------- this below is the previous attempt -----
 -- not sure how to know the stack ending size
 -- Complete the following definition, executing a list of instructions
-exec : {n m : Nat} -> (c : Cmd n) -> Stack (oldStackSize c) -> Stack n
-exec (HALT {n}) s = s
--- oh, interesting, even though the type is Stack n -> Stack n
--- here the goal is Stack (Succ n)
--- which is what I wanted!
--- actually, no, because also s now is of type Stack (Succ n)
--- solved with oldStackSize
-exec (PUSH x c) s = Cons x s
-exec (ADD c) (Cons x (Cons x₁ s)) = Cons (x + x₁) s
+-- exec : {n m : Nat} -> (c : Cmd n) -> Stack m -> Stack (newStackSize c m)
+-- exec (HALT {n}) s = s
+-- -- oh, interesting, even though the type is Stack n -> Stack n
+-- -- here the goal is Stack (Succ n)
+-- -- which is what I wanted!
+-- -- actually, no, because also s now is of type Stack (Succ n)
+-- -- solved with oldStackSize
+-- exec (PUSH x c) s = Cons x s
+-- exec (ADD c) (Cons x (Cons x₁ s)) = Cons (x + x₁) s
 
 
 -- here I discovered that the add type is actually incorrect,
 -- because ADD : {n : Nat} -> Cmd (Succ n) -> Cmd n
 -- allows for the case in which you have a nil, and you will lose
--- the x information apply it
+-- the x information applying it
 -- another alternative I explored was to allow ADD to be called 
 -- even on Cons x Nil, but then I thought that the result would just
 -- be the stack itself, and another constructor does this: HALT
@@ -784,9 +829,9 @@ exec (ADD c) (Cons x (Cons x₁ s)) = Cons (x + x₁) s
 -- exec (ADD c) (Cons x (Cons x₁ s)) = {!   !}
 
 -- Define a compiler from expresions to instructions
-compile : {n : Nat} -> Expr -> Cmd (Succ n)
-compile (Add e e₁) = ADD (PUSH (eval e₁) (PUSH (eval e) HALT))
-compile (Val x) = PUSH x HALT
+-- compile : {n : Nat} -> Expr -> Cmd (Succ n)
+-- compile (Add e e₁) = ADD (PUSH (eval e₁) (PUSH (eval e) HALT))
+-- compile (Val x) = PUSH x HALT
 
 
 -- And prove your compiler correct
@@ -802,10 +847,10 @@ compile (Val x) = PUSH x HALT
 
 -- And prove your compiler correct
 -- this one has oldStackSize as yellow and exec as red
-correctness : (e : Expr)
-    (s : Stack (oldStackSize (compile e))) ->
-    append Nil (Cons (eval e) s) == exec (compile e) s
-correctness e = {! !}
+-- correctness : (e : Expr)
+--     (s : Stack (oldStackSize (compile e))) ->
+--     append Nil (Cons (eval e) s) == exec (compile e) s
+-- correctness e = {! !}
 
 
 
