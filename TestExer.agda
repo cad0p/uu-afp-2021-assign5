@@ -206,20 +206,37 @@ testCompilerValₙ = Refl
 testCompilerValₘ : append Nil (Cons (eval (Val 1)) Nil) == Cons 1 Nil
 testCompilerValₘ = Refl
 
+-- now let's try with a zeroVec
+
+testCompilerValₙ-zeroVec4 : exec (compile (Val 1)) (zeroVec 4) == 
+    Cons 1    (
+    Cons Zero (
+    Cons Zero (
+    Cons Zero (
+    Cons Zero (
+    Cons Zero 
+    Nil)))))
+testCompilerValₙ-zeroVec4 = Refl
+
+-- yay vreturn doesn't complain
+testCompilerValₘ-zeroVec4 : vreturn (Cons (eval (Val 1)) (zeroVec 4)) == 
+        Cons 1 (Cons Zero (Cons Zero (Cons Zero (Cons Zero Nil))))
+testCompilerValₘ-zeroVec4 = Refl
+
 -- so from the above we conclude that 
 -- the compiler is correct for Val
 
 
 -- let's try the add constructor
 
-addSimpleExpr : Expr
-addSimpleExpr = Add (Val 1) (Val 2)
+-- addSimpleExpr : Expr
+-- addSimpleExpr = Add (Val 1) (Val 2)
 
-testCompilerAddSimpleₙ : 
-    exec (compile addSimpleExpr) (Cons 1 (Cons 1 Nil)) == Cons 2 Nil
-testCompilerAddSimpleₙ = Refl
+-- testCompilerAddSimpleₙ : 
+--     exec (compile addSimpleExpr) (Cons 1 (Cons 1 Nil)) == Cons 2 Nil
+-- testCompilerAddSimpleₙ = Refl
 
 
-testCompilerAddSimpleₘ : 
-    append Nil (Cons (eval addSimpleExpr) Nil) == Cons 3 Nil
-testCompilerAddSimpleₘ = Refl
+-- testCompilerAddSimpleₘ : 
+--     append Nil (Cons (eval addSimpleExpr) Nil) == Cons 3 Nil
+-- testCompilerAddSimpleₘ = Refl

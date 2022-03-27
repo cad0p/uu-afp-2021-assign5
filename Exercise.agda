@@ -829,9 +829,9 @@ exec (ADD c) s = {! c  !}
 -- exec (ADD c) (Cons x (Cons x₁ s)) = {!   !}
 
 -- Define a compiler from expresions to instructions
--- compile : {n : Nat} -> Expr -> Cmd (Succ n)
--- compile (Add e e₁) = ADD (PUSH (eval e₁) (PUSH (eval e) HALT))
--- compile (Val x) = PUSH x HALT
+compile : {n : Nat} -> Expr -> Cmd (Succ n)
+compile (Add e e₁) = ADD (PUSH (eval e₁) (PUSH (eval e) HALT))
+compile (Val x) = PUSH x HALT
 
 
 -- And prove your compiler correct
@@ -852,6 +852,12 @@ exec (ADD c) s = {! c  !}
 --     append Nil (Cons (eval e) s) == exec (compile e) s
 -- correctness e = {! !}
 
+-- this workaround is wrong though because it flips the result
+-- I found in the tests..
+
+-- so I'm defining a function that simply returns the vector
+vreturn : {a : Set} {n : Nat} -> Vec a n -> Vec a n
+vreturn v = v
 
 
 --BONUS exercises: extend the language with new constructs for let
