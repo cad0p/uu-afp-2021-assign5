@@ -660,7 +660,7 @@ Not P = P -> Empty
 -- familiar with from classical logic do not hold.
 
 notNotP : {P : Set} -> P -> Not (Not P)
-notNotP = {!!}
+notNotP = {!  !}
 
 -- The reverse does not hold: Not (Not P) does not imply P
 
@@ -743,15 +743,44 @@ data Cmd : Nat -> Set where
   -- push a new number on the stack
   PUSH : {n : Nat} -> Nat -> Cmd n -> Cmd (Succ n)
   -- replace the top two elements of the stack with their sum
-  ADD : {n : Nat} -> Cmd (Succ n) -> Cmd n
+  ADD : {n : Nat} -> Cmd (Succ (Succ n)) -> Cmd (Succ n)
 
 Stack : (n : Nat) -> Set
 Stack n = Vec Nat n
 
+-- so the n of the exec function is actually the return type
+-- of HALT, PUSH, and ADD
+-- but what we really want is to also have the original n
+-- not knowing how to retrieve it, I'm going to build a function
+-- that replicates the behavior described in the Cmd datatype.
+oldStackSize : {n : Nat} -> Cmd n -> Nat
+oldStackSize {n} HALT = n
+oldStackSize {Succ n} (PUSH x c) = n
+oldStackSize {n} (ADD c) = Succ n
+
 
 -- not sure how to know the stack ending size
-exec : {n m : Nat} -> Cmd n -> Stack n -> Stack m
-exec c = {!!}
+-- Complete the following definition, executing a list of instructions
+exec : {n : Nat} -> (c : Cmd n) -> Stack (oldStackSize c) -> Stack n
+exec (HALT {n}) s = s
+-- oh, interesting, even though the type is Stack n -> Stack n
+-- here the goal is Stack (Succ n)
+-- which is what I wanted!
+-- actually, no, because also s now is of type Stack (Succ n)
+exec (PUSH x c) s = Cons x s
+exec (ADD c) (Cons x (Cons x₁ s)) = Cons (x + x₁) s
+
+
+-- here I discovered that the add type is actually incorrect,
+-- because ADD : {n : Nat} -> Cmd (Succ n) -> Cmd n
+-- allows for the case in which you have a nil, and you will lose
+-- the x information apply it
+-- another alternative I explored was to allow ADD to be called 
+-- even on Cons x Nil, but then I thought that the result would just
+-- be the stack itself, and another constructor does this: HALT
+-- so there is no need to define it for Vec Nat 1 :)
+-- exec (ADD c) (Cons x Nil) = {!   !}
+-- exec (ADD c) (Cons x (Cons x₁ s)) = {!   !}
 
 -- -- Define a compiler from expresions to instructions
 -- compile : Expr -> Cmd
