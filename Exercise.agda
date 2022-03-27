@@ -719,16 +719,16 @@ eval (Add l r) = eval l + eval r
 eval (Val x) = x
 
 -- We can also compile such expressions to stack machine code
-data Cmd : Set where
-  -- stop execution and return the current stack
-  HALT : Cmd 
-  -- push a new number on the stack
-  PUSH : Nat -> Cmd -> Cmd 
-  -- replace the top two elements of the stack with their sum
-  ADD : Cmd -> Cmd
+-- data Cmd : Set where
+--   -- stop execution and return the current stack
+--   HALT : Cmd 
+--   -- push a new number on the stack
+--   PUSH : Nat -> Cmd -> Cmd 
+--   -- replace the top two elements of the stack with their sum
+--   ADD : Cmd -> Cmd
 
-Stack : Set
-Stack = List Nat
+-- Stack : Set
+-- Stack = List Nat
 
 -- Complete the following definition, executing a list of instructions
 -- Note: there 'obvious' definition is not total.  There are several
@@ -736,17 +736,31 @@ Stack = List Nat
 -- represent stacks. To do so, however, you may also need to update
 -- the Cmd datatype...
 
-exec : Cmd -> Stack -> Stack
+
+data Cmd : Nat -> Set where
+  -- stop execution and return the current stack
+  HALT : {n : Nat} -> Cmd n 
+  -- push a new number on the stack
+  PUSH : {n : Nat} -> Nat -> Cmd n -> Cmd (Succ n)
+  -- replace the top two elements of the stack with their sum
+  ADD : {n : Nat} -> Cmd (Succ n) -> Cmd n
+
+Stack : (n : Nat) -> Set
+Stack n = Vec Nat n
+
+
+-- not sure how to know the stack ending size
+exec : {n m : Nat} -> Cmd n -> Stack n -> Stack m
 exec c = {!!}
 
--- Define a compiler from expresions to instructions
-compile : Expr -> Cmd
-compile e = {!!}
+-- -- Define a compiler from expresions to instructions
+-- compile : Expr -> Cmd
+-- compile e = {!!}
 
--- And prove your compiler correct
-correctness : (e : Expr) (s : Stack) ->
-  Cons (eval e) s == exec (compile e) s
-correctness e = {!!}
+-- -- And prove your compiler correct
+-- correctness : (e : Expr) (s : Stack) ->
+--   Cons (eval e) s == exec (compile e) s
+-- correctness e = {!!}
 
 --BONUS exercises: extend the language with new constructs for let
 --bindings, variables, new operators, mutable references, assignment,
