@@ -216,7 +216,7 @@ addSimpleExpr : Expr
 addSimpleExpr = Add (Val 1) (Val 2)
 
 testCompilerAddSimpleₙ : 
-    exec (compile addSimpleExpr) Nil == ?
+    exec (compile addSimpleExpr) (Cons 1 (Cons 1 Nil)) == Cons 2 Nil
 testCompilerAddSimpleₙ = Refl
 
 

@@ -785,7 +785,7 @@ exec (ADD c) (Cons x (Cons x₁ s)) = Cons (x + x₁) s
 
 -- Define a compiler from expresions to instructions
 compile : {n : Nat} -> Expr -> Cmd (Succ n)
-compile (Add e e₁) = ADD (PUSH (eval e₁) (compile e))
+compile (Add e e₁) = ADD (PUSH (eval e₁) (PUSH (eval e) HALT))
 compile (Val x) = PUSH x HALT
 
 
